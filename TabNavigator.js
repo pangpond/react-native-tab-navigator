@@ -1,20 +1,16 @@
-'use strict';
+"use strict";
 
-import { Set } from 'immutable';
-import React, {
-  PropTypes,
-} from 'react';
-import {
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Set } from "immutable";
+import React from "react";
+import PropTypes from "prop-types";
+import { StyleSheet, View } from "react-native";
 
-import Badge from './Badge';
-import Layout from './Layout';
-import StaticContainer from './StaticContainer';
-import Tab from './Tab';
-import TabBar from './TabBar';
-import TabNavigatorItem from './TabNavigatorItem';
+import Badge from "./Badge";
+import Layout from "./Layout";
+import StaticContainer from "./StaticContainer";
+import Tab from "./Tab";
+import TabBar from "./TabBar";
+import TabNavigatorItem from "./TabNavigatorItem";
 
 export default class TabNavigator extends React.Component {
   static propTypes = {
@@ -28,7 +24,7 @@ export default class TabNavigator extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      renderedSceneKeys: this._updateRenderedSceneKeys(props.children),
+      renderedSceneKeys: this._updateRenderedSceneKeys(props.children)
     };
 
     this._renderTab = this._renderTab.bind(this);
@@ -39,13 +35,13 @@ export default class TabNavigator extends React.Component {
     this.setState({
       renderedSceneKeys: this._updateRenderedSceneKeys(
         nextProps.children,
-        renderedSceneKeys,
-      ),
+        renderedSceneKeys
+      )
     });
   }
 
   _getSceneKey(item, index): string {
-    return `scene-${(item.key !== null) ? item.key : index}`;
+    return `scene-${item.key !== null ? item.key : index}`;
   }
 
   _updateRenderedSceneKeys(children, oldSceneKeys = Set()): Set {
@@ -63,7 +59,14 @@ export default class TabNavigator extends React.Component {
   }
 
   render() {
-    let { style, children, tabBarStyle, tabBarShadowStyle, sceneStyle, ...props } = this.props;
+    let {
+      style,
+      children,
+      tabBarStyle,
+      tabBarShadowStyle,
+      sceneStyle,
+      ...props
+    } = this.props;
     let scenes = [];
 
     React.Children.forEach(children, (item, index) => {
@@ -76,10 +79,11 @@ export default class TabNavigator extends React.Component {
       }
 
       let { selected } = item.props;
-      let scene =
+      let scene = (
         <SceneContainer key={sceneKey} selected={selected} style={sceneStyle}>
           {item}
-        </SceneContainer>;
+        </SceneContainer>
+      );
 
       scenes.push(scene);
     });
@@ -105,7 +109,7 @@ export default class TabNavigator extends React.Component {
       } else if (item.props.renderIcon) {
         let defaultIcon = item.props.renderIcon();
         icon = React.cloneElement(defaultIcon, {
-          style: [defaultIcon.props.style, styles.defaultSelectedIcon],
+          style: [defaultIcon.props.style, styles.defaultSelectedIcon]
         });
       }
     } else if (item.props.renderIcon) {
@@ -116,7 +120,11 @@ export default class TabNavigator extends React.Component {
     if (item.props.renderBadge) {
       badge = item.props.renderBadge();
     } else if (item.props.badgeText) {
-      badge = <Badge>{item.props.badgeText}</Badge>;
+      badge = (
+        <Badge>
+          {item.props.badgeText}
+        </Badge>
+      );
     }
 
     return (
@@ -126,15 +134,15 @@ export default class TabNavigator extends React.Component {
         allowFontScaling={item.props.allowFontScaling}
         titleStyle={[
           item.props.titleStyle,
-          item.props.selected ? [
-            styles.defaultSelectedTitle,
-            item.props.selectedTitleStyle,
-          ] : null,
+          item.props.selected
+            ? [styles.defaultSelectedTitle, item.props.selectedTitleStyle]
+            : null
         ]}
         badge={badge}
         onPress={item.props.onPress}
         hidesTabTouch={this.props.hidesTabTouch}
-        style={item.props.tabStyle}>
+        style={item.props.tabStyle}
+      >
         {icon}
       </Tab>
     );
@@ -144,7 +152,7 @@ export default class TabNavigator extends React.Component {
 class SceneContainer extends React.Component {
   static propTypes = {
     ...View.propTypes,
-    selected: PropTypes.bool,
+    selected: PropTypes.bool
   };
 
   render() {
@@ -152,13 +160,14 @@ class SceneContainer extends React.Component {
     return (
       <View
         {...props}
-        pointerEvents={selected ? 'auto' : 'none'}
+        pointerEvents={selected ? "auto" : "none"}
         removeClippedSubviews={!selected}
         style={[
           styles.sceneContainer,
           selected ? null : styles.hiddenSceneContainer,
-          props.style,
-        ]}>
+          props.style
+        ]}
+      >
         <StaticContainer shouldUpdate={selected}>
           {this.props.children}
         </StaticContainer>
@@ -169,26 +178,26 @@ class SceneContainer extends React.Component {
 
 let styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   sceneContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    paddingBottom: Layout.tabBarHeight,
+    paddingBottom: Layout.tabBarHeight
   },
   hiddenSceneContainer: {
-    overflow: 'hidden',
-    opacity: 0,
+    overflow: "hidden",
+    opacity: 0
   },
   defaultSelectedTitle: {
-    color: 'rgb(0, 122, 255)',
+    color: "rgb(0, 122, 255)"
   },
   defaultSelectedIcon: {
-    tintColor: 'rgb(0, 122, 255)',
-  },
+    tintColor: "rgb(0, 122, 255)"
+  }
 });
 
 TabNavigator.Item = TabNavigatorItem;
